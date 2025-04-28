@@ -1,0 +1,15 @@
+-- CreateTable
+CREATE TABLE `ticket` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `setor` VARCHAR(100) NOT NULL,
+    `descricao` TEXT NOT NULL,
+    `nome` VARCHAR(191) NOT NULL,
+    `created_at` TIMESTAMP(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
+    `userId` INTEGER NOT NULL,
+    `status` ENUM('ABERTO', 'EM_ANDAMENTO', 'CONCLUIDO') NOT NULL DEFAULT 'ABERTO',
+
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- AddForeignKey
+ALTER TABLE `ticket` ADD CONSTRAINT `ticket_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
