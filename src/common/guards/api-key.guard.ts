@@ -2,20 +2,22 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  ForbiddenException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
 
 @Injectable()
 export class ApiKeyGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request>();
+    const request = context.switchToHttp().getRequest();
+
     const apiKey = request.headers['x-api-key'];
 
-    const validApiKey = process.env.API_KEY;
+    if (!apiKey) {
+      throw new UnauthorizedException('x-api-key não encontrada.');
+    }
 
-    if (!apiKey || apiKey !== validApiKey) {
-      throw new ForbiddenException('API Key inválida ou ausente');
+    if (apiKey !== process.env.API_KEY) {
+      throw new UnauthorizedException('x-api-key inválida.');
     }
 
     return true;
